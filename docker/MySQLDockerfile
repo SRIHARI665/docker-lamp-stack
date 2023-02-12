@@ -1,6 +1,6 @@
-FROM mysql:5.7-debian
+FROM mysql:latest
 
-RUN apt-get -yqq update && apt-get install -yqq pv
+#RUN apt-get -yqq update && apt-get install -yqq pv
 
 COPY docker/db /var/db
 COPY docker/helpers/db/db_import.sh /var/db/db_import.sh
