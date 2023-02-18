@@ -33,7 +33,7 @@ services:
             MYSQL_USER: admin
             MYSQL_PASSWORD: admin
         ports:
-            - "33060:3306"
+            - "33061:3306"
 volumes:
     mysql_data:
         driver: "local"
