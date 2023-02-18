@@ -1,5 +1,9 @@
 <?php
 declare(strict_types = 1);
+require_once 'MySQLDatabase.php';
+require_once 'Customer.php';
+require_once 'Response.php';
+
 /**
  * TOPICS that are covered
  *
@@ -17,41 +21,8 @@ declare(strict_types = 1);
  * HTTP Methods
  * HTTP Status Codes
  */
-
-//Docker will resolve this host in to its internal network address. On our host machines it is 127.0.0.1(localhost)
-$host = 'mysql-server';
-$db   = 'weintegral';
-$user = 'root';
-$pass = 'root';
-$charset = 'utf8mb4';
-
-//DSN : Data Source Name
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
-
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (\PDOException $e) {
-    print_r($e->getMessage());
-    throw new \PDOException($e->getMessage(), (int)$e->getCode());
-}
-
-$stmt = $pdo->query('SELECT * FROM customers');
-$records = $stmt->fetchAll();
-$output['customers'] = [];
-foreach($records as $record) {
-    $customer = [];
-    $customer['name'] = $record['customerName'];
-    $customer['number']= $record['customerNumber'];
-    $customer['firstName']= $record['contactFirstName'];
-    $customer['lastName']= $record['contactLastName'];
-
-    $output['customers'][] = $customer;
-}
-
-header('Content-Type: application/json; charset=utf-8');
-echo json_encode($output);
+$database = new MySQLDatabase();
+$customer = new Customer($database);
+$output = $customer->findAll();
+$response = new Response();
+$response->toJson($output);
