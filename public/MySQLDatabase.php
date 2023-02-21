@@ -38,10 +38,6 @@ class MySQLDatabase
      */
     public function getConnection(): PDO
     {
-        try {
-            return new PDO($this->dsn, $this->username, $this->password, $this->getDefaultPDOOptions());
-        } catch (\PDOException $e) {
-            throw new \PDOException($e->getMessage(), (int)$e->getCode());
-        }
+        return new PDO($this->dsn, $this->username, $this->password, $this->getDefaultPDOOptions());
     }
 }
