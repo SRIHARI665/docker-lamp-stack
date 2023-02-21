@@ -19,6 +19,7 @@ class Office
             $office = [];
             $office['officeCode']= $record['officeCode'];
             $office['city']= $record['city'];
+            $office['state']= $record['state'];
             $office['phone']= $record['phone'];
 
             $output['offices'][] = $office;

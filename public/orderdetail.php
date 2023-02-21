@@ -5,7 +5,7 @@ require_once 'OrderDetails.php';
 require_once 'Response.php';
 
 $database = new MySQLDatabase();
-$orderdetails = new OrderDetails($database);
-$output = $orderdetails->findAll();
+$orderDetails = new OrderDetails($database);
+$output = $orderDetails->findAll();
 $response = new Response();
 $response->toJson($output);
