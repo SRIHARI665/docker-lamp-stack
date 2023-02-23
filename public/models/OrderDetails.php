@@ -1,5 +1,8 @@
 <?php
 declare(strict_types=1);
+
+use Exceptions\utils\MySQLDatabase;
+
 class OrderDetails
 {
     private MySQLDatabase $database;

@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
-class Office
+
+use Exceptions\utils\MySQLDatabase;
+
+class Employee
 {
     private MySQLDatabase $database;
     public function __construct(MySQLDatabase $database)
@@ -11,18 +14,17 @@ class Office
     public function findAll(): array
     {
         $pdo = $this->database->getConnection();
-        $stmt = $pdo->query('SELECT * FROM offices');
+        $stmt = $pdo->query('SELECT * FROM employees');
         $records = $stmt->fetchAll();
 
-        $output['offices'] = [];
+        $output['employees'] = [];
         foreach($records as $record) {
-            $office = [];
-            $office['officeCode']= $record['officeCode'];
-            $office['city']= $record['city'];
-            $office['state']= $record['state'];
-            $office['phone']= $record['phone'];
+            $employee = [];
+            $employee['number']= $record['employeeNumber'];
+            $employee['firstName']= $record['firstName'];
+            $employee['lastName']= $record['lastName'];
 
-            $output['offices'][] = $office;
+            $output['employees'][] = $employee;
         }
 
         return $output;
@@ -30,7 +32,7 @@ class Office
     public function findById(int $id): array
     {
         $pdo = $this->database->getConnection();
-        $stmt = $pdo->query("SELECT * FROM offices WHERE officeCode = {$id}");
+        $stmt = $pdo->query("SELECT * FROM employees WHERE employeeNumber = {$id}");
         $record = $stmt->fetch();
         if (gettype($record) !== 'array') {
             throw new LogicException('data is not properly retrieved from DB');
@@ -49,30 +51,27 @@ class Office
         $sql = <<< INSERT_SQL
             INSERT INTO
               `employees` (
+                `employeeNumber`,
+                `lastName`,
+                `firstName`,
+                `extension`,
+                `email`,
                 `officeCode`,
-                `city`,
-                `phone`,
-                `addressLine1`,
-                `addressLine2`,
-                `state`,
-                `country`,
-                `postalCode`,
-                `territory`
+                `reportsTo`,
+                `jobTitle`
                 
               )
             VALUES
               (
-               {$userData['officeCode']},
+               {$userData['employeeNumber']},
                 
-                '{$userData['city']}',
-                '{$userData['phone']}',
-                '{$userData['addressLine1']}',
-                '{$userData['addressLine2']}',
-                '{$userData['state']}',
-                '{$userData['country']}',
-                '{$userData['postalCode']}'
-                '{$userData['territory']}'
-                
+                '{$userData['lastName']}',
+                '{$userData['firstName']}',
+                '{$userData['extension']}',
+                '{$userData['email']}',
+                '{$userData['officeCode']}',
+                '{$userData['reportsTo']}',
+                '{$userData['jobTitle']}'
                 
               );
 INSERT_SQL;
