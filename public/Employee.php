@@ -26,4 +26,52 @@ class Employee
 
         return $output;
     }
+    public function findById(int $id): array
+    {
+        $pdo = $this->database->getConnection();
+        $stmt = $pdo->query("SELECT * FROM employees WHERE employeeNumber = {$id}");
+        $record = $stmt->fetch();
+        if (gettype($record) !== 'array') {
+            throw new LogicException('data is not properly retrieved from DB');
+        }
+        $output['data'] = $record;
+
+        return $output;
+    }
+
+    /**
+     * @throws PDOException
+     */
+    public function insert(array $userData): void
+    {
+        $pdo = $this->database->getConnection();
+        $sql = <<< INSERT_SQL
+            INSERT INTO
+              `employees` (
+                `employeeNumber`,
+                `lastName`,
+                `firstName`,
+                `extension`,
+                `email`,
+                `officeCode`,
+                `reportsTo`,
+                `jobTitle`
+                
+              )
+            VALUES
+              (
+               {$userData['employeeNumber']},
+                
+                '{$userData['lastName']}',
+                '{$userData['firstName']}',
+                '{$userData['extension']}',
+                '{$userData['email']}',
+                '{$userData['officeCode']}',
+                '{$userData['reportsTo']}',
+                '{$userData['jobTitle']}'
+                
+              );
+INSERT_SQL;
+        $pdo->exec($sql);
+    }
 }
